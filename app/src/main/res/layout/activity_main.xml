@@ -7,21 +7,21 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".MainActivity">
+    tools:context=".mvvm.MainActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
         android:gravity="center"
-        android:text="MVP EXAMPLE"
+        android:text="MVVM EXAMPLE"
         android:textSize="36dp"></TextView>
 
     <EditText
-        android:id="@+id/edt_username"
+        android:id="@+id/edt_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Username"></EditText>
+        android:hint="Email"></EditText>
 
     <EditText
         android:id="@+id/edt_password"
