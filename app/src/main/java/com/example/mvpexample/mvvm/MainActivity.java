@@ -3,6 +3,7 @@ package com.example.mvpexample.mvvm;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,9 @@ import android.widget.Toast;
 
 import com.example.mvpexample.R;
 
-import io.reactivex.observers.DisposableCompletableObserver;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class MainActivity extends AppCompatActivity {
     private MainViewModel mainViewModel;
@@ -21,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainViewModel = new MainViewModel(this);
+        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mainViewModel.setContext(this);
         setupViewById();
         btnLogin.setOnClickListener(onClickListener);
 
@@ -39,21 +43,15 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             String email = edtEmail.getText().toString().trim();
             String password = edtPassword.getText().toString().trim();
-            mainViewModel.login(email, password).subscribeWith(new LoginObserver());
+            mainViewModel.getIsLoggedIn(email, password).observe(MainActivity.this, new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    Toast.makeText(getApplicationContext(), aBoolean ? "Login Succeed" : "Login Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     };
 
-    private class LoginObserver extends DisposableCompletableObserver {
-        @Override
-        public void onComplete() {
-            Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Toast.makeText(getApplicationContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-
-        }
-    }
 
 }
